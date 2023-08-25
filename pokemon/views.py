@@ -1,3 +1,5 @@
+from random import choice
+
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view
 from rest_framework import status
@@ -8,6 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .filters import PokemonFilter
 from .models import Pokemon
+from .models import PokemonItem
 from .serializers import PokemonDetailsSerializer
 from .serializers import PokemonGiveXPSerializer
 from .serializers import PokemonSerializer
@@ -42,6 +45,12 @@ class PokemonViewSet(ModelViewSet):
         return Pokemon.objects.filter(trainer=user).order_by(
             "pokedex_creature__ref_number"
         )
+
+    def perform_create(self, serializer):
+        favorite_item = choice(PokemonItem.objects.all())
+        pokemon = serializer.save()
+        pokemon.favorite_item = favorite_item
+        pokemon.save()
 
     def get_serializer_class(self):
         if self.action == "retrieve":

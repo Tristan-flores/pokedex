@@ -2,11 +2,14 @@ from rest_framework import serializers
 
 from .models import Pokemon
 from authentication.serializers import UserSerializer
+from item.serializers import PokemonItemSerializer
 from pokedex.serializers import PokedexCreatureDetailSerializer
 
 
 class PokemonSerializer(serializers.ModelSerializer):
     """Serializer of Pokemon object"""
+
+    favorite_item = serializers.SerializerMethodField()
 
     class Meta:
         model = Pokemon
@@ -17,8 +20,14 @@ class PokemonSerializer(serializers.ModelSerializer):
             "nickname",
             "level",
             "experience",
+            "favorite_item",
         )
         read_only_fields = ("id", "level")
+
+    def get_favorite_item(self, instance):
+        if instance.favorite_item:
+            return PokemonItemSerializer(instance.favorite_item).data
+        return None
 
     def validate(self, attrs):
         """Add pokemon nickname if no nickname is given"""
@@ -34,6 +43,8 @@ class PokemonDetailsSerializer(serializers.ModelSerializer):
     pokedex_creature = PokedexCreatureDetailSerializer()
     trainer = UserSerializer()
 
+    favorite_item = serializers.SerializerMethodField()
+
     class Meta:
         model = Pokemon
         fields = (
@@ -43,7 +54,13 @@ class PokemonDetailsSerializer(serializers.ModelSerializer):
             "experience",
             "pokedex_creature",
             "trainer",
+            "favorite_item",
         )
+
+    def get_favorite_item(self, instance):
+        if instance.favorite_item:
+            return PokemonItemSerializer(instance.favorite_item).data
+        return None
 
 
 class PokemonGiveXPSerializer(serializers.Serializer):

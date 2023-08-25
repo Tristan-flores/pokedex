@@ -14,6 +14,17 @@ User = get_user_model()
 DEFAULT_PASSWORD = "secretpassword"
 
 
+class ItemFactory(DjangoModelFactory):
+    """Generator of Item objects"""
+
+    class Meta:
+        model = PokemonItem
+
+    name = factory.Sequence(lambda n: f"Item {n + 1}")
+    image = "https://www.example.com/item_image.png"
+    description = "Item description"
+
+
 class PokedexCreatureFactory(DjangoModelFactory):
     """Generator of PokedexCreature objects"""
 
@@ -44,6 +55,7 @@ class PokemonFactory(DjangoModelFactory):
     pokedex_creature = factory.SubFactory(PokedexCreatureFactory)
     level = 1
     experience = 0
+    favorite_item = factory.LazyFunction(PokemonItem.objects.order_by("?").first)
 
     @factory.post_generation
     def clean(obj, create, extracted, **kwargs):
@@ -62,17 +74,6 @@ class UserFactory(DjangoModelFactory):
     def set_password(obj, create, extracted, **kwargs):
         obj.set_password(DEFAULT_PASSWORD)
         obj.save()
-
-
-class ItemFactory(DjangoModelFactory):
-    """Generator of Item objects"""
-
-    class Meta:
-        model = PokemonItem
-
-    name = factory.Sequence(lambda n: f"Item {n + 1}")
-    image = "https://www.example.com/item_image.png"
-    description = "Item description"
 
 
 register(PokedexCreatureFactory)
