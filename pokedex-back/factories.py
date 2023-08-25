@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from factory.django import DjangoModelFactory
 from pytest_factoryboy import register
 
+from item.models import PokemonItem
 from pokedex.models import PokedexCreature
 from pokemon.models import Pokemon
 
@@ -63,6 +64,18 @@ class UserFactory(DjangoModelFactory):
         obj.save()
 
 
+class ItemFactory(DjangoModelFactory):
+    """Generator of Item objects"""
+
+    class Meta:
+        model = PokemonItem
+
+    name = factory.Sequence(lambda n: f"Item {n + 1}")
+    image = "https://www.example.com/item_image.png"
+    description = "Item description"
+
+
 register(PokedexCreatureFactory)
 register(PokemonFactory)
 register(UserFactory)
+register(ItemFactory)
