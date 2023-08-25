@@ -38,6 +38,7 @@ class PokemonViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        """Check the connected user and add it in filter"""
         return Pokemon.objects.filter(trainer=user).order_by(
             "pokedex_creature__ref_number"
         )
