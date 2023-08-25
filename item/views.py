@@ -7,7 +7,7 @@ from .serializers import PokemonItemSerializer
 
 
 class PokemonItemViewSet(viewsets.ReadOnlyModelViewSet):
-    """API endpoint to display all creature items"""
+    """API endpoint to display all pokemons favorite items"""
 
     permission_classes = [
         AllowAny,

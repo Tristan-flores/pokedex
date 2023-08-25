@@ -9,6 +9,7 @@ from pokedex.serializers import PokedexCreatureDetailSerializer
 class PokemonSerializer(serializers.ModelSerializer):
     """Serializer of Pokemon object"""
 
+    """force the cast for favorite item"""
     favorite_item = serializers.SerializerMethodField()
 
     class Meta:
@@ -25,6 +26,7 @@ class PokemonSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "level")
 
     def get_favorite_item(self, instance):
+        """add favorite item informations to the displayed pokemon"""
         if instance.favorite_item:
             return PokemonItemSerializer(instance.favorite_item).data
         return None
@@ -43,6 +45,7 @@ class PokemonDetailsSerializer(serializers.ModelSerializer):
     pokedex_creature = PokedexCreatureDetailSerializer()
     trainer = UserSerializer()
 
+    """force the cast for favorite item"""
     favorite_item = serializers.SerializerMethodField()
 
     class Meta:
@@ -58,6 +61,7 @@ class PokemonDetailsSerializer(serializers.ModelSerializer):
         )
 
     def get_favorite_item(self, instance):
+        """add favorite item informations to the displayed pokemon"""
         if instance.favorite_item:
             return PokemonItemSerializer(instance.favorite_item).data
         return None

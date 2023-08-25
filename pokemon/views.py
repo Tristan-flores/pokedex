@@ -47,6 +47,7 @@ class PokemonViewSet(ModelViewSet):
         )
 
     def perform_create(self, serializer):
+        """add the random favorite item at the pokemon's creation"""
         favorite_item = choice(PokemonItem.objects.all())
         pokemon = serializer.save()
         pokemon.favorite_item = favorite_item
